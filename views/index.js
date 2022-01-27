@@ -15,8 +15,8 @@ const Row = ({ letters, word }) => {
         <div className="row">
             {
                 letters.map((item, i) => (
-                    correctness = item && word.includes(item) ? 1 : 0,
-                    correctness = word[i] == letters[i] ? 2 : correctness,
+                    correctness = item && word.includes(item.normalize("NFD").replace(/\p{Diacritic}/gu, "")) ? 1 : 0,
+                    correctness = word[i] == letters[i].normalize("NFD").replace(/\p{Diacritic}/gu, "") ? 2 : correctness,
                     <Square word={word} key={i} letter={item} correctness={correctness} />
                 ))
             }
@@ -53,26 +53,27 @@ const Grid = () => {
     }
     const [count, setCount] = React.useState(0);
     const [grid, setGrid] = React.useState(letterGrid);
-    // console.log(grid, count);
-    // if (grid[count].equals(word)) {
-    //     alert("correct")
-    //     grid[count] = resWord.split;
-    // }
-    // else
-    if (grid[rows - 1][0]) {
-    alert('the word was ' + resWord);
-    grid[rows] = resWord.split;
-}
-return (
-    <div className="grid">
-        {
-            grid.map((item, i) => (
-                <Row key={i} letters={item} word={word} />
-            ))
+    console.log(grid, count, word);
+
+    if (count && JSON.stringify(word) == JSON.stringify(grid[count - 1]).normalize("NFD").replace(/\p{Diacritic}/gu, "")) {
+        alert("correct")
+        grid[count - 1] = resWord.split("");
+    }
+    else
+        if (grid[rows - 1][0]) {
+            alert('the word was ' + resWord);
+            grid.push(resWord.split(''));
         }
-        <Guess count={count} grid={grid} setCount={setCount} />
-    </div>
-)
+    return (
+        <div className="grid">
+            {
+                grid.map((item, i) => (
+                    <Row key={i} letters={item} word={word} />
+                ))
+            }
+            <Guess count={count} grid={grid} setCount={setCount} />
+        </div>
+    )
 }
 
 function App() {

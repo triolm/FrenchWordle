@@ -12,7 +12,7 @@ const Square = ({ letter, correctness }) => {
 const Row = ({ letters, word }) => {
     let correctness;
     return (
-        <div className="row">
+        <div className="grid-row">
             {
                 letters.map((item, i) => (
                     correctness = item && word.includes(item.normalize("NFD").replace(/\p{Diacritic}/gu, "")) ? 1 : 0,
@@ -31,7 +31,7 @@ const Guess = ({ count, grid, setCount }) => {
             <button onClick={(e) => {
                 e.preventDefault()
                 if (document.getElementById('input').value.length == 5 && count < grid.length) {
-                    grid[count] = document.getElementById('input').value.split('')
+                    grid[count + 1] = document.getElementById('input').value.split('')
                     document.getElementById('input').value = ""
                     setCount(count + 1)
                 }
@@ -51,16 +51,16 @@ const Grid = () => {
             letterGrid[i].push("")
         }
     }
-    const [count, setCount] = React.useState(0);
+    const [count, setCount] = React.useState(-1);
     const [grid, setGrid] = React.useState(letterGrid);
     console.log(grid, count, word);
 
-    if (count && JSON.stringify(word) == JSON.stringify(grid[count - 1]).normalize("NFD").replace(/\p{Diacritic}/gu, "")) {
+    if (count >= 0 && JSON.stringify(word) == JSON.stringify(grid[count]).normalize("NFD").replace(/\p{Diacritic}/gu, "")) {
         alert("correct")
-        grid[count - 1] = resWord.split("");
+        grid[count] = resWord.split("");
     }
     else
-        if (grid[rows - 1][0]) {
+        if (count >= rows - 1) {
             alert('the word was ' + resWord);
             grid.push(resWord.split(''));
         }
@@ -76,9 +76,20 @@ const Grid = () => {
     )
 }
 
+
+const Header = () => {
+    return (
+        <div className="header">
+            <h1>Wordle</h1>
+            <div>mais</div>
+            <h2>en français</h2>
+        </div>)
+}
+
 function App() {
     return (
         <div>
+            <Header />
             <Grid />
         </div>
     )

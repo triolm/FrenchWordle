@@ -26,9 +26,9 @@ const Row = ({ letters, word }) => {
 
 const Guess = ({ count, grid, setCount }) => {
     return (
-        <form>
-            <input id="input"></input>
-            <button onClick={(e) => {
+        <form className="d-flex flex-row">
+            <input id="input" className="form-control w-100"></input>
+            <button className="btn btn-primary" onClick={(e) => {
                 e.preventDefault()
                 if (document.getElementById('input').value.length == 5 && count < grid.length) {
                     grid[count + 1] = document.getElementById('input').value.split('')
@@ -51,19 +51,21 @@ const Grid = () => {
             letterGrid[i].push("")
         }
     }
+
+
     const [count, setCount] = React.useState(-1);
     const [grid, setGrid] = React.useState(letterGrid);
     console.log(grid, count, word);
 
+
     if (count >= 0 && JSON.stringify(word) == JSON.stringify(grid[count]).normalize("NFD").replace(/\p{Diacritic}/gu, "")) {
-        alert("correct")
         grid[count] = resWord.split("");
+        alert("correct")
     }
-    else
-        if (count >= rows - 1) {
-            alert('the word was ' + resWord);
-            grid.push(resWord.split(''));
-        }
+    else if (count >= rows - 1) {
+        alert('the word was ' + resWord);
+        grid.push(resWord.split(''));
+    }
     return (
         <div className="grid">
             {
